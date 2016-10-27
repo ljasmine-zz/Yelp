@@ -8,10 +8,10 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
     
     var businesses: [Business]!
-    var searchController: UISearchController?
+    var searchBar: UISearchBar!
     var categories: [String]!
 
     @IBOutlet weak var tableView: UITableView!
@@ -25,10 +25,20 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.estimatedRowHeight = 120
 
         // replace navigation bar with search bar and search controller
-        setUpSearchController()
+        // Initialize the UISearchBar
+        searchBar = UISearchBar()
+        searchBar.delegate = self
 
-        Business.searchWithTerm(term: "", completion: { (businesses: [Business]?, error: Error?) -> Void in
-            
+        // Add SearchBar to the NavigationBar
+        searchBar.sizeToFit()
+        navigationItem.titleView = searchBar
+
+        doSearch(term: "")
+    }
+
+    fileprivate func doSearch(term: String) {
+        Business.searchWithTerm(term: term, completion: { (businesses: [Business]?, error: Error?) -> Void in
+
             self.businesses = businesses
             self.tableView.reloadData()
 
@@ -38,7 +48,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
                     print(business.address!)
                 }
             }
-            
+
             }
         )
     }
@@ -82,18 +92,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         self.tableView.reloadData()})
     }
 
-    private dynamic func setUpSearchController() {
-        self.searchController = UISearchController(searchResultsController: nil)
-        self.searchController?.searchResultsUpdater = self
-        self.searchController?.delegate = self
-        self.searchController?.searchBar.delegate = self
-
-        self.searchController?.hidesNavigationBarDuringPresentation = false
-        self.searchController?.dimsBackgroundDuringPresentation = false
-        self.definesPresentationContext = true
-        self.navigationItem.titleView = searchController?.searchBar
-    }
-
     func updateSearchResults(for searchController: UISearchController){
         if let searchText = searchController.searchBar.text {
             if let categories = self.categories {
@@ -108,5 +106,34 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
     }
-
 }
+
+// SearchBar methods
+extension BusinessesViewController: UISearchBarDelegate {
+
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(true, animated: true)
+        return true
+    }
+
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(false, animated: true)
+        return true
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+
+        if let searchTerm = searchBar.text {
+            doSearch(term: searchTerm)
+        } else {
+            doSearch(term: "")
+        }
+    }
+}
+
