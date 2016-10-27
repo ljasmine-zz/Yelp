@@ -36,13 +36,15 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.sizeToFit()
         navigationItem.titleView = searchBar
 
-        doSearch(term: "")
+        doSearch(term: "", isShowProgress: true)
     }
 
-    fileprivate func doSearch(term: String) {
+    fileprivate func doSearch(term: String, isShowProgress: Bool) {
 
-        // Display HUD right before the request is made
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        if isShowProgress {
+            // Display HUD right before the request is made
+            MBProgressHUD.showAdded(to: self.view, animated: true)
+        }
 
         Business.searchWithTerm(term: term, completion: { (businesses: [Business]?, error: Error?) -> Void in
 
@@ -131,7 +133,7 @@ extension BusinessesViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        doSearch(term: "")
+        doSearch(term: "", isShowProgress: false)
         searchBar.text = ""
         searchBar.placeholder = "Restaurants"
         searchBar.resignFirstResponder()
@@ -139,12 +141,7 @@ extension BusinessesViewController: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-
-        if let searchTerm = searchBar.text {
-            doSearch(term: searchTerm)
-        } else {
-            doSearch(term: "")
-        }
+        doSearch(term: searchBar.text!, isShowProgress: true)
     }
 }
 

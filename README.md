@@ -30,6 +30,7 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 - [X] Yelp launch screen
+- [X] User sees loading state while waiting for yelp API.
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
