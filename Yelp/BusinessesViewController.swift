@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
     
@@ -28,6 +29,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         // Initialize the UISearchBar
         searchBar = UISearchBar()
         searchBar.delegate = self
+        searchBar.placeholder = "Restaurants"
+        searchBar.tintColor = UIColor.white
 
         // Add SearchBar to the NavigationBar
         searchBar.sizeToFit()
@@ -37,6 +40,10 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     fileprivate func doSearch(term: String) {
+
+        // Display HUD right before the request is made
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+
         Business.searchWithTerm(term: term, completion: { (businesses: [Business]?, error: Error?) -> Void in
 
             self.businesses = businesses
@@ -49,8 +56,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
                 }
             }
 
-            }
-        )
+            // Hide HUD once the network request comes back (must be done on main UI thread)
+            MBProgressHUD.hide(for: self.view, animated: true)
+        })
     }
     
     override func didReceiveMemoryWarning() {
@@ -113,6 +121,7 @@ extension BusinessesViewController: UISearchBarDelegate {
 
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.setShowsCancelButton(true, animated: true)
+        searchBar.placeholder = "e.g. tacos, delivery"
         return true
     }
 
@@ -122,7 +131,9 @@ extension BusinessesViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        doSearch(term: "")
         searchBar.text = ""
+        searchBar.placeholder = "Restaurants"
         searchBar.resignFirstResponder()
     }
 
