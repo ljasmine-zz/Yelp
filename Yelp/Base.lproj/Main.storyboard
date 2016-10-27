@@ -6,7 +6,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Yelp-->
+        <!--Businesses View Controller-->
         <scene sceneID="5L9-Uz-lNK">
             <objects>
                 <viewController id="2xI-yr-O5N" customClass="BusinessesViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
@@ -115,8 +115,9 @@
                             <constraint firstItem="l5M-7b-UxD" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="tjW-Lg-Fqi"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Yelp" id="DTQ-fc-kno">
-                        <barButtonItem key="leftBarButtonItem" title="Filters" id="CnH-yn-ROl">
+                    <navigationItem key="navigationItem" id="DTQ-fc-kno">
+                        <barButtonItem key="leftBarButtonItem" title="Filter" id="CnH-yn-ROl">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="Vvd-QX-HCi" kind="presentation" id="gIh-GO-zIk"/>
                             </connections>
@@ -142,14 +143,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="95" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0JB-gO-QBR">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="70" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0JB-gO-QBR">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SwitchCell" rowHeight="95" id="qJk-De-9Xb" customClass="SwitchCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="92" width="375" height="95"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SwitchCell" rowHeight="70" id="qJk-De-9Xb" customClass="SwitchCell" customModule="Yelp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="92" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qJk-De-9Xb" id="OhB-Ag-GUW">
-                                            <frame key="frameInset" width="375" height="94"/>
+                                            <frame key="frameInset" width="375" height="69"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Twc-Ts-r5k">
@@ -184,11 +185,13 @@
                     </view>
                     <navigationItem key="navigationItem" title="Filters" id="gWL-2W-bzO">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="3cM-7K-77m">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="onCancelButton:" destination="7em-e6-brb" id="Sbq-fg-BIu"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Search" id="o5o-K4-clc">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="onSearchButton:" destination="7em-e6-brb" id="Ba3-Yv-DRQ"/>
                             </connections>
@@ -200,16 +203,19 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7J1-Jy-Tbg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3036" y="134"/>
+            <point key="canvasLocation" x="3036" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LYj-pc-NIG">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="b1R-MP-gtn" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="BusinessNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="b1R-MP-gtn" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="VUS-Ty-Rl4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.78823529410000004" green="0.023529411760000001" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -223,11 +229,14 @@
         <!--Navigation Controller-->
         <scene sceneID="RYs-nF-K2s">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Vvd-QX-HCi" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="FiltersNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="Vvd-QX-HCi" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="667"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2Mb-vH-h2G">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.78823529411764703" green="0.023529411764705882" blue="0.078431372549019607" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
