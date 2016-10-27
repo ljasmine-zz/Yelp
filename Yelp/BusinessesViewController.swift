@@ -9,11 +9,12 @@
 import UIKit
 import MBProgressHUD
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,FiltersViewControllerDelegate {
     
     var businesses: [Business]!
     var searchBar: UISearchBar!
-    var categories: [String]!
+    var categories: [String]?
+    var searchText: String! = ""
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -36,27 +37,27 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.sizeToFit()
         navigationItem.titleView = searchBar
 
-        doSearch(term: "", isShowProgress: true)
+        doSearch(isShowProgress: true)
     }
 
-    fileprivate func doSearch(term: String, isShowProgress: Bool) {
+    fileprivate func doSearch(isShowProgress: Bool) {
 
         if isShowProgress {
             // Display HUD right before the request is made
             MBProgressHUD.showAdded(to: self.view, animated: true)
         }
 
-        Business.searchWithTerm(term: term, completion: { (businesses: [Business]?, error: Error?) -> Void in
+        Business.searchWithTerm(term: self.searchText, sort: nil, categories: self.categories, deals: nil, completion: { (businesses: [Business]?, error: Error?) -> Void in
 
             self.businesses = businesses
             self.tableView.reloadData()
 
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
+//            if let businesses = businesses {
+//                for business in businesses {
+//                    print(business.name!)
+//                    print(business.address!)
+//                }
+//            }
 
             // Hide HUD once the network request comes back (must be done on main UI thread)
             MBProgressHUD.hide(for: self.view, animated: true)
@@ -78,9 +79,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
-
         cell.business = businesses[indexPath.row]
-
         return cell
     }
 
@@ -97,24 +96,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 
     func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters: [String : AnyObject]) {
         self.categories = filters["categories"] as? [String]
-        Business.searchWithTerm(term: "Restaurants", sort: nil, categories: categories, deals: nil, completion: {(businesses, error) -> Void in
-        self.businesses = businesses
-        self.tableView.reloadData()})
-    }
-
-    func updateSearchResults(for searchController: UISearchController){
-        if let searchText = searchController.searchBar.text {
-            if let categories = self.categories {
-                Business.searchWithTerm(term: searchText, sort: nil, categories: categories, deals: nil, completion: {(businesses, error) -> Void in
-                    self.businesses = businesses
-                    self.tableView.reloadData()})
-
-            } else {
-                Business.searchWithTerm(term: searchText, completion: {(businesses, error) -> Void in
-                    self.businesses = businesses
-                    self.tableView.reloadData()})
-            }
-        }
+        doSearch(isShowProgress: true)
     }
 }
 
@@ -133,15 +115,17 @@ extension BusinessesViewController: UISearchBarDelegate {
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        doSearch(term: "", isShowProgress: false)
+        self.searchText = ""
         searchBar.text = ""
+        doSearch(isShowProgress: false)
         searchBar.placeholder = "Restaurants"
         searchBar.resignFirstResponder()
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        doSearch(term: searchBar.text!, isShowProgress: true)
+        self.searchText = searchBar.text!
+        doSearch(isShowProgress: true)
     }
 }
 

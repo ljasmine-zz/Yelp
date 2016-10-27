@@ -46,27 +46,27 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="469 Reviews" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Tp-DI-ra0">
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.4968549679" green="0.4968549679" blue="0.4968549679" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="88 Division Street, Mission Bay" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oo0-6b-3Xc">
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thai, Seafood, Salad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PhF-dG-SE9">
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thai, Seafood, Salad" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PhF-dG-SE9">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.4968549679" green="0.4968549679" blue="0.4968549679" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q5G-rh-Wla">
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.4968549679" green="0.4968549679" blue="0.4968549679" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="0.07 mi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kTu-EL-wRZ">
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.4968549679" green="0.4968549679" blue="0.4968549679" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -76,8 +76,9 @@
                                                 <constraint firstAttribute="trailing" secondItem="Q5G-rh-Wla" secondAttribute="trailing" constant="8" id="36Q-W7-3zE"/>
                                                 <constraint firstItem="Oo0-6b-3Xc" firstAttribute="leading" secondItem="XUd-O8-Grm" secondAttribute="trailing" constant="8" id="3jo-nN-Juf"/>
                                                 <constraint firstAttribute="trailing" secondItem="Oo0-6b-3Xc" secondAttribute="trailing" constant="30" id="4hc-p4-DEd"/>
-                                                <constraint firstItem="PhF-dG-SE9" firstAttribute="top" secondItem="Oo0-6b-3Xc" secondAttribute="bottom" constant="5" id="6I1-tV-Ova"/>
+                                                <constraint firstItem="PhF-dG-SE9" firstAttribute="top" secondItem="Oo0-6b-3Xc" secondAttribute="bottom" constant="3" id="6I1-tV-Ova"/>
                                                 <constraint firstItem="PhF-dG-SE9" firstAttribute="leading" secondItem="Oo0-6b-3Xc" secondAttribute="leading" id="8eG-bQ-J3j"/>
+                                                <constraint firstAttribute="trailing" secondItem="PhF-dG-SE9" secondAttribute="trailing" constant="30" id="8io-5L-k0Z"/>
                                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="XUd-O8-Grm" secondAttribute="bottom" constant="10" id="E9N-O5-tJ5"/>
                                                 <constraint firstItem="kTu-EL-wRZ" firstAttribute="top" secondItem="k38-Qw-EXa" secondAttribute="top" constant="10" id="FkU-2J-deJ"/>
                                                 <constraint firstItem="kTu-EL-wRZ" firstAttribute="leading" secondItem="9Gl-0a-OTK" secondAttribute="trailing" constant="8" id="H4B-Sw-nID"/>
