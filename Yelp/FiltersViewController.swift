@@ -81,28 +81,20 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
+        var res = 0
+
         switch tableStructure[section] {
         case .Deal:
             return 1
         case .Distance:
-            if isSectionCollapsed[.Distance]! {
-                return 1
-            } else {
-                return 5
-            }
+            res = isSectionCollapsed[.Distance]! ? 1 : 5
         case .Sort:
-            if isSectionCollapsed[.Sort]! {
-                return 1
-            } else {
-                return 3
-            }
+            res = isSectionCollapsed[.Sort]! ? 1 : 3
         case .Category:
-            if isSectionCollapsed[.Category]! {
-                return 4
-            } else {
-                return yelpCategories().count
-            }
+            res = isSectionCollapsed[.Category]! ? 4 : yelpCategories().count
         }
+
+        return res
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
