@@ -15,6 +15,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     var searchBar: UISearchBar!
     var categories: [String]?
     var searchText: String! = ""
+    var filters: Preferences = Preferences()
+
+    var distanceMap : [Int: Float] = [0: 25, 1: 0.3, 2: 1, 3: 3, 4: 10]
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -47,17 +50,15 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             MBProgressHUD.showAdded(to: self.view, animated: true)
         }
 
-        Business.searchWithTerm(term: self.searchText, sort: nil, categories: self.categories, deals: nil, completion: { (businesses: [Business]?, error: Error?) -> Void in
+        let isOfferingDeal = self.filters.deal
+        let sortValue = self.filters.sort
+        let distanceIndex = self.filters.distance
+        let distance = distanceMap[distanceIndex]! * 1609.344
+
+        Business.searchWithTerm(term: self.searchText, sort: sortValue, categories: self.categories, deals: isOfferingDeal, distance: distance, completion: { (businesses: [Business]?, error: Error?) -> Void in
 
             self.businesses = businesses
             self.tableView.reloadData()
-
-//            if let businesses = businesses {
-//                for business in businesses {
-//                    print(business.name!)
-//                    print(business.address!)
-//                }
-//            }
 
             // Hide HUD once the network request comes back (must be done on main UI thread)
             MBProgressHUD.hide(for: self.view, animated: true)
@@ -88,15 +89,26 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
      // In a storyboard-based application, you will often want to do a little preparation before navigation
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-        let navigationController = segue.destination as! UINavigationController
-        let filtersViewController = navigationController.topViewController as! FiltersViewController
+        if segue.identifier == "showFiltersSegue" {
+            let navigationController = segue.destination as! UINavigationController
+            let filtersViewController = navigationController.topViewController as! FiltersViewController
 
-        filtersViewController.delegate = self
+            filtersViewController.delegate = self
+            filtersViewController.currentFilters = filters
+        }
      }
 
+
+    // Listening to changes propagating back from the Filters page
     func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters: [String : AnyObject]) {
+
+        // updated the categories
+        self.filters = filtersViewController.preferencesFromTableData()
         self.categories = filters["categories"] as? [String]
+
         doSearch(isShowProgress: true)
+
+        // update other filters
     }
 }
 

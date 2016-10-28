@@ -12,22 +12,56 @@ import UIKit
     @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters: [String: AnyObject])
 }
 
+enum FilterSectionIdentifier : String {
+    case Deal = "Deal"
+    case Distance = "Distance"
+    case Sort = "Sort By"
+    case Category = "Categories"
+}
+
 class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SwitchCellDelegate {
 
     @IBOutlet weak var tableView: UITableView!
 
     weak var delegate: FiltersViewControllerDelegate?
 
-    var categories: [[String: String]]!
-    var switchStates = [Int:Bool]()
+    let tableStructure: [FilterSectionIdentifier] = [.Deal, .Distance, .Sort, .Category]
+
+    var dealSwitchState : Bool = false
+    var sortedBySelection : YelpSortMode = YelpSortMode.bestMatched
+    var distanceSelection: Int = 0
+    var categorySwitchStates = [Int:Bool]()
+
+    var distanceMap : [Int: String] = [0: "Auto", 1: "0.3 mile", 2: "1 mile", 3: "5 miles", 4: "10 miles"]
+    var sortedByMap : [Int: String] = [0: "Best Matched", 1: "Distance", 2: "Highest Rated"]
+
+    var isSectionExpanded : [Int: Bool] = [0: false, 1: false, 2: false, 3: false]
+
+    // should be set by the class that instantiates this view controller
+    var currentFilters: Preferences! {
+
+        // update the filters field for local use
+        didSet {
+
+            dealSwitchState = currentFilters.deal
+            sortedBySelection = currentFilters.sort
+            distanceSelection = currentFilters.distance
+            categorySwitchStates = currentFilters.categorySwitchStates
+
+            tableView?.reloadData()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        categories = yelpCategories()
-        
         tableView.delegate = self
         tableView.dataSource = self
+
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 70
+
+        currentFilters = currentFilters ?? Preferences()
 
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
     }
@@ -37,47 +71,155 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Dispose of any resources that can be recreated.
     }
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return tableStructure.count
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return tableStructure[section].rawValue
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+
+        switch tableStructure[section] {
+        case .Deal:
+            return 1
+        case .Distance:
+            return 5
+        case .Sort:
+            return 3
+        case .Category:
+            return yelpCategories().count
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-        cell.switchLabel.text = categories[indexPath.row]["name"]
-        cell.delegate = self
-        cell.onSwitch.isOn = switchStates[indexPath.row] ?? false
 
-        return cell
+        switch tableStructure[indexPath.section] {
+        case .Deal:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            cell.delegate = self
+            cell.switchLabel.text = "Offering a Deal"
+            cell.onSwitch.isOn = dealSwitchState
+            return cell
+        case .Distance:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RadioCell", for: indexPath) as! RadioCell
+            cell.radioLabel.text = distanceMap[indexPath.row]
+            if indexPath.row == distanceSelection {
+                cell.radioImageView.image = UIImage(named: "check")
+                cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                cell.radioImageView.tintColor = UIColor(hue: 0.5861, saturation: 1, brightness: 1, alpha: 1.0)
+            } else {
+                cell.radioImageView.image = UIImage(named: "circle")
+                cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                cell.radioImageView.tintColor = UIColor.lightGray
+            }
+            return cell
+        case .Sort:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RadioCell", for: indexPath) as! RadioCell
+            cell.radioLabel.text = sortedByMap[indexPath.row]
+            if indexPath.row == sortedBySelection.rawValue {
+                cell.radioImageView.image = UIImage(named: "check")
+                cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                cell.radioImageView.tintColor = UIColor(hue: 0.5861, saturation: 1, brightness: 1, alpha: 1.0)
+            } else {
+                cell.radioImageView.image = UIImage(named: "circle")
+                cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                cell.radioImageView.tintColor = UIColor.lightGray
+            }
+            return cell
+        case .Category:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            let categories = yelpCategories()
+            cell.delegate = self
+            cell.switchLabel.text = categories[indexPath.row]["name"]
+            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
+
+            return cell
+        }
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        let section = tableStructure[indexPath.section]
+
+        switch section {
+        case .Sort:
+            sortedBySelection = YelpSortMode(rawValue: indexPath.row)!
+        case .Distance:
+            distanceSelection = indexPath.row
+        case .Category: break
+        case .Deal: break
+        }
+
+        tableView.reloadSections(NSIndexSet(index: indexPath.section) as IndexSet, with: UITableViewRowAnimation.fade)
+    }
+
+
+    // disable cell highlighting for deal and category sections
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        let section = tableStructure[indexPath.section]
+
+        if section == .Deal || section == .Category {
+           return false
+        }
+        return true
     }
 
     @IBAction func onCancelButton(_ sender: AnyObject) {
+
         dismiss(animated: true, completion: nil)
     }
 
     @IBAction func onSearchButton(_ sender: AnyObject) {
+
         dismiss(animated: true, completion: nil)
-        var filters = [String : AnyObject] ()
+
+        var filters = [String: AnyObject]()
+        let categories = yelpCategories()
         var selectedCategories = [String] ()
 
-        for (row, isSelected) in switchStates {
+        for (row, isSelected) in categorySwitchStates {
             if isSelected {
                 selectedCategories.append(categories[row]["code"]!)
             }
         }
 
         if selectedCategories.count > 0 {
-            filters["categories"] = selectedCategories as AnyObject?
+            filters["categories"] = selectedCategories as AnyObject
         }
 
-        delegate?.filtersViewController!(self, didUpdateFilters: filters)
+        filters["deal"] = dealSwitchState as AnyObject
+        filters["sort"] = sortedBySelection as AnyObject
+        filters["distance"] = distanceSelection as AnyObject
+        filters["categorySwitchStates"] = categorySwitchStates as AnyObject
+
+        delegate?.filtersViewController!(self, didUpdateFilters: filters as [String : AnyObject])
+    }
+
+    func preferencesFromTableData() -> Preferences {
+        let ret = Preferences()
+        ret.deal = dealSwitchState
+        ret.distance = distanceSelection
+        ret.sort = sortedBySelection
+        ret.categorySwitchStates = categorySwitchStates
+        return ret
     }
 
     func switchCell(_ switchCell: SwitchCell, didChangeValue value: Bool) {
         let indexPath = tableView.indexPath(for: switchCell)!
-        switchStates[indexPath.row] = value
+        let section = tableStructure[indexPath.section]
+
+        if section == .Deal {
+            dealSwitchState = value
+        } else if section == .Category {
+            categorySwitchStates[indexPath.row] = value
+        }
     }
 
-    func yelpCategories() -> [[String:String]] {
+
+    // MARK: Private
+    private func yelpCategories() -> [[String:String]] {
         return [["name": "Afghan", "code": "afghani"],
                 ["name": "African", "code": "african"],
                 ["name": "American, New", "code": "newamerican"],
