@@ -35,6 +35,5 @@ class SwitchCell: UITableViewCell {
         if delegate != nil {
             self.delegate?.switchCell?(self, didChangeValue: onSwitch.isOn)
         }
-
     }
 }
