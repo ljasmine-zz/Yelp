@@ -35,7 +35,7 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
     var distanceMap : [Int: String] = [0: "Auto", 1: "0.3 mile", 2: "1 mile", 3: "5 miles", 4: "10 miles"]
     var sortedByMap : [Int: String] = [0: "Best Matched", 1: "Distance", 2: "Highest Rated"]
 
-    var isSectionExpanded : [Int: Bool] = [0: false, 1: false, 2: false, 3: false]
+    var isSectionCollapsed : [FilterSectionIdentifier: Bool] = [.Deal: true, .Distance: true, .Sort: true, .Category: true]
 
     // should be set by the class that instantiates this view controller
     var currentFilters: Preferences! {
@@ -85,55 +85,101 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
         case .Deal:
             return 1
         case .Distance:
-            return 5
+            if isSectionCollapsed[.Distance]! {
+                return 1
+            } else {
+                return 5
+            }
         case .Sort:
-            return 3
+            if isSectionCollapsed[.Sort]! {
+                return 1
+            } else {
+                return 3
+            }
         case .Category:
-            return yelpCategories().count
+            if isSectionCollapsed[.Category]! {
+                return 4
+            } else {
+                return yelpCategories().count
+            }
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         switch tableStructure[indexPath.section] {
+
         case .Deal:
+
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
             cell.delegate = self
             cell.switchLabel.text = "Offering a Deal"
             cell.onSwitch.isOn = dealSwitchState
             return cell
         case .Distance:
+
             let cell = tableView.dequeueReusableCell(withIdentifier: "RadioCell", for: indexPath) as! RadioCell
-            cell.radioLabel.text = distanceMap[indexPath.row]
-            if indexPath.row == distanceSelection {
-                cell.radioImageView.image = UIImage(named: "check")
-                cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
-                cell.radioImageView.tintColor = UIColor(hue: 0.5861, saturation: 1, brightness: 1, alpha: 1.0)
-            } else {
-                cell.radioImageView.image = UIImage(named: "circle")
+
+            if isSectionCollapsed[.Distance]! {
+                cell.radioLabel.text = distanceMap[distanceSelection]
+                cell.radioImageView.image = UIImage(named: "down_arrow")
                 cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
                 cell.radioImageView.tintColor = UIColor.lightGray
+            } else {
+
+                cell.radioLabel.text = distanceMap[indexPath.row]
+                if indexPath.row == distanceSelection {
+                    cell.radioImageView.image = UIImage(named: "check")
+                    cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                    cell.radioImageView.tintColor = UIColor(hue: 0.5861, saturation: 1, brightness: 1, alpha: 1.0)
+                } else {
+                    cell.radioImageView.image = UIImage(named: "circle")
+                    cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                    cell.radioImageView.tintColor = UIColor.lightGray
+                }
             }
             return cell
+
         case .Sort:
+
             let cell = tableView.dequeueReusableCell(withIdentifier: "RadioCell", for: indexPath) as! RadioCell
-            cell.radioLabel.text = sortedByMap[indexPath.row]
-            if indexPath.row == sortedBySelection.rawValue {
-                cell.radioImageView.image = UIImage(named: "check")
-                cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
-                cell.radioImageView.tintColor = UIColor(hue: 0.5861, saturation: 1, brightness: 1, alpha: 1.0)
-            } else {
-                cell.radioImageView.image = UIImage(named: "circle")
+
+            if isSectionCollapsed[.Sort]! {
+                cell.radioLabel.text = sortedByMap[sortedBySelection.rawValue]
+                cell.radioImageView.image = UIImage(named: "down_arrow")
                 cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
                 cell.radioImageView.tintColor = UIColor.lightGray
+            } else {
+                cell.radioLabel.text = sortedByMap[indexPath.row]
+                if indexPath.row == sortedBySelection.rawValue {
+                    cell.radioImageView.image = UIImage(named: "check")
+                    cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                    cell.radioImageView.tintColor = UIColor(hue: 0.5861, saturation: 1, brightness: 1, alpha: 1.0)
+                } else {
+                    cell.radioImageView.image = UIImage(named: "circle")
+                    cell.radioImageView.image = cell.radioImageView.image?.withRenderingMode(.alwaysTemplate)
+                    cell.radioImageView.tintColor = UIColor.lightGray
+                }
+
             }
             return cell
+
         case .Category:
+
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-            let categories = yelpCategories()
-            cell.delegate = self
-            cell.switchLabel.text = categories[indexPath.row]["name"]
-            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
+
+            if isSectionCollapsed[.Category]! && indexPath.row == 3 {
+                cell.switchLabel.text = "See All"
+                cell.switchLabel.textColor = UIColor.lightGray
+                cell.onSwitch.isHidden = true
+            } else {
+                let categories = yelpCategories()
+                cell.delegate = self
+                cell.switchLabel.text = categories[indexPath.row]["name"]
+                cell.switchLabel.textColor = UIColor.black
+                cell.onSwitch.isHidden = false
+                cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
+            }
 
             return cell
         }
@@ -144,12 +190,27 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
         let section = tableStructure[indexPath.section]
 
         switch section {
-        case .Sort:
-            sortedBySelection = YelpSortMode(rawValue: indexPath.row)!
-        case .Distance:
-            distanceSelection = indexPath.row
-        case .Category: break
         case .Deal: break
+        case .Sort:
+            if isSectionCollapsed[.Sort]! {
+                isSectionCollapsed[.Sort] = false
+            } else {
+                sortedBySelection = YelpSortMode(rawValue: indexPath.row)!
+                isSectionCollapsed[.Sort] = true
+            }
+        case .Distance:
+            if isSectionCollapsed[.Distance]! {
+                isSectionCollapsed[.Distance] = false
+            } else {
+                distanceSelection = indexPath.row
+                isSectionCollapsed[.Distance] = true
+            }
+        case .Category:
+            if isSectionCollapsed[.Category]! && indexPath.row == 3 {
+                isSectionCollapsed[.Category] = false
+            } else {
+                isSectionCollapsed[.Category] = true
+            }
         }
 
         tableView.reloadSections(NSIndexSet(index: indexPath.section) as IndexSet, with: UITableViewRowAnimation.fade)
@@ -160,6 +221,9 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         let section = tableStructure[indexPath.section]
 
+        if section == .Category && isSectionCollapsed[.Category]! && indexPath.row == 3 {
+            return true
+        }
         if section == .Deal || section == .Category {
            return false
         }
