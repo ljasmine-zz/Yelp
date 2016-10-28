@@ -102,7 +102,6 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
         switch tableStructure[indexPath.section] {
 
         case .Deal:
-
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
             cell.delegate = self
             cell.switchLabel.text = "Offering a Deal"
@@ -161,6 +160,7 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
 
             if isSectionCollapsed[.Category]! && indexPath.row == 3 {
+                cell.leadingConstraint.constant = cell.bounds.width / 2 - 20
                 cell.switchLabel.text = "See All"
                 cell.switchLabel.textColor = UIColor.lightGray
                 cell.onSwitch.isHidden = true
@@ -168,6 +168,7 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let categories = yelpCategories()
                 cell.delegate = self
                 cell.switchLabel.text = categories[indexPath.row]["name"]
+                cell.leadingConstraint.constant = 20
                 cell.switchLabel.textColor = UIColor.black
                 cell.onSwitch.isHidden = false
                 cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false

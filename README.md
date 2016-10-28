@@ -34,7 +34,7 @@ The following **additional** features are implemented:
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
+1. How can I make "See All" animate the expansion of rows below it only?
 2.
 
 ## Video Walkthrough

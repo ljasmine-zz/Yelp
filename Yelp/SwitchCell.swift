@@ -16,6 +16,7 @@ class SwitchCell: UITableViewCell {
 
     @IBOutlet weak var onSwitch: UISwitch!
     @IBOutlet weak var switchLabel: UILabel!
+    @IBOutlet weak var leadingConstraint: NSLayoutConstraint!
 
     weak var delegate: SwitchCellDelegate?
      
