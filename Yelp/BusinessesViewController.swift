@@ -8,18 +8,21 @@
 
 import UIKit
 import MBProgressHUD
+import MapKit
 
 class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,FiltersViewControllerDelegate {
     
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var tableView: UITableView!
+
     var businesses: [Business]!
     var searchBar: UISearchBar!
     var categories: [String]?
     var searchText: String! = ""
     var filters: Preferences = Preferences()
+    var selectedSegment: Int = 0
 
     var distanceMap : [Int: Float] = [0: 25, 1: 0.3, 2: 1, 3: 3, 4: 10]
-
-    @IBOutlet weak var tableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,8 +42,63 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         // Add SearchBar to the NavigationBar
         searchBar.sizeToFit()
         navigationItem.titleView = searchBar
+        navigationController?.navigationBar.tintColor = UIColor.white
+
+        // decide which type of view to show, list or grid
+        if selectedSegment == 0 {
+            self.tableView.isHidden = false
+            self.mapView.isHidden = true
+
+            let mapViewButton = UIBarButtonItem(image: UIImage(named: "pin"), landscapeImagePhone: nil, style: .done, target: self, action: #selector(switchViews))
+            self.navigationItem.rightBarButtonItem = mapViewButton
+        } else {
+            self.tableView.isHidden = true
+            self.mapView.isHidden = false
+
+            let listViewButton = UIBarButtonItem(image: UIImage(named: "list"), landscapeImagePhone: nil, style: .done, target: self, action: #selector(switchViews))
+            self.navigationItem.rightBarButtonItem = listViewButton
+
+            addAnnotationsToMap()
+        }
+
 
         doSearch(isShowProgress: true)
+    }
+
+    private dynamic func switchViews() {
+        if selectedSegment == 0 {
+
+            self.tableView.isHidden = true
+            self.mapView.isHidden = false
+
+            let listViewButton = UIBarButtonItem(image: UIImage(named: "list"), landscapeImagePhone: nil, style: .done, target: self, action: #selector(switchViews))
+            self.navigationItem.rightBarButtonItem = listViewButton
+
+            selectedSegment = 1
+            addAnnotationsToMap()
+
+        } else {
+
+            self.tableView.isHidden = false
+            self.mapView.isHidden = true
+
+            let mapViewButton = UIBarButtonItem(image: UIImage(named: "pin"), landscapeImagePhone: nil, style: .done, target: self, action: #selector(switchViews))
+            self.navigationItem.rightBarButtonItem = mapViewButton
+            
+            selectedSegment = 0
+        }
+    }
+
+    private func addAnnotationsToMap() {
+        mapView.addAnnotations(businesses)
+        mapView.showAnnotations(businesses, animated: true)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        tableView.contentInset.top = topLayoutGuide.length
+        tableView.contentInset.bottom = bottomLayoutGuide.length
     }
 
     fileprivate func doSearch(isShowProgress: Bool) {
@@ -55,10 +113,15 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         let distanceIndex = self.filters.distance
         let distance = distanceMap[distanceIndex]! * 1609.344
 
+        if let array = self.businesses {
+            self.mapView.removeAnnotations(array)
+        }
+
         Business.searchWithTerm(term: self.searchText, sort: sortValue, categories: self.categories, deals: isOfferingDeal, distance: distance, completion: { (businesses: [Business]?, error: Error?) -> Void in
 
             self.businesses = businesses
             self.tableView.reloadData()
+            self.addAnnotationsToMap()
 
             // Hide HUD once the network request comes back (must be done on main UI thread)
             MBProgressHUD.hide(for: self.view, animated: true)

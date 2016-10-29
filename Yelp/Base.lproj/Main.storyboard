@@ -18,11 +18,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <mapView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="t0h-is-M9o"/>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="128" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="l5M-7b-UxD">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BusinessCell" rowHeight="120" id="LM8-jB-vjl" customClass="BusinessCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="92" width="375" height="120"/>
+                                        <rect key="frame" x="0.0" y="28" width="375" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LM8-jB-vjl" id="k38-Qw-EXa">
                                             <frame key="frameInset" width="375" height="119"/>
@@ -113,6 +114,10 @@
                             <constraint firstAttribute="trailing" secondItem="l5M-7b-UxD" secondAttribute="trailing" id="6U3-sH-VNM"/>
                             <constraint firstItem="VBY-gq-v8E" firstAttribute="top" secondItem="l5M-7b-UxD" secondAttribute="bottom" id="7c8-Fd-Zgk"/>
                             <constraint firstItem="l5M-7b-UxD" firstAttribute="top" secondItem="XhR-oz-92f" secondAttribute="top" id="8Hs-nr-Ky9"/>
+                            <constraint firstItem="t0h-is-M9o" firstAttribute="top" secondItem="XhR-oz-92f" secondAttribute="top" id="MT7-36-rRN"/>
+                            <constraint firstItem="VBY-gq-v8E" firstAttribute="top" secondItem="t0h-is-M9o" secondAttribute="bottom" id="S3H-xm-WLE"/>
+                            <constraint firstItem="t0h-is-M9o" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="WsH-pk-AdW"/>
+                            <constraint firstAttribute="trailing" secondItem="t0h-is-M9o" secondAttribute="trailing" id="fUe-rR-4I4"/>
                             <constraint firstItem="l5M-7b-UxD" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="tjW-Lg-Fqi"/>
                         </constraints>
                     </view>
@@ -123,14 +128,18 @@
                                 <segue destination="Vvd-QX-HCi" kind="presentation" identifier="showFiltersSegue" id="gIh-GO-zIk"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="pin" id="G6j-9h-ehg">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapView" destination="t0h-is-M9o" id="5cC-kY-xSk"/>
                         <outlet property="tableView" destination="l5M-7b-UxD" id="UY4-Zk-Jq9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fgb-4b-F1b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1558" y="134"/>
+            <point key="canvasLocation" x="1557.5999999999999" y="133.5832083958021"/>
         </scene>
         <!--Filters-->
         <scene sceneID="FZe-Kq-fw3">
@@ -148,10 +157,10 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SwitchCell" rowHeight="70" id="qJk-De-9Xb" customClass="SwitchCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="120" width="375" height="70"/>
+                                        <rect key="frame" x="0.0" y="119.5" width="1000" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qJk-De-9Xb" id="OhB-Ag-GUW">
-                                            <frame key="frameInset" width="375" height="69"/>
+                                            <frame key="frameInset" width="1000" height="69"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Twc-Ts-r5k">
@@ -175,10 +184,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RadioCell" rowHeight="70" id="k8Z-3S-peI" customClass="RadioCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="190" width="375" height="70"/>
+                                        <rect key="frame" x="0.0" y="189.5" width="1000" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="k8Z-3S-peI" id="sGY-ct-rgt">
-                                            <frame key="frameInset" width="375" height="69"/>
+                                            <frame key="frameInset" width="1000" height="69"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circle" translatesAutoresizingMaskIntoConstraints="NO" id="KO6-JP-v73">
@@ -283,5 +292,6 @@
     </scenes>
     <resources>
         <image name="circle" width="25" height="25"/>
+        <image name="pin" width="25" height="25"/>
     </resources>
 </document>

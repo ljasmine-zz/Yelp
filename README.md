@@ -23,7 +23,7 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 - [ ] Infinite scroll for restaurant results.
-- [ ] Implement map view of restaurant results.
+- [X] Implement map view of restaurant results.
 - [ ] Implement a custom switch instead of the default UISwitch.
 - [ ] Implement the restaurant detail page.
 

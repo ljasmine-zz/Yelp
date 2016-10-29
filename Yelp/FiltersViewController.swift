@@ -160,7 +160,6 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
 
             if isSectionCollapsed[.Category]! && indexPath.row == 3 {
-                cell.leadingConstraint.constant = cell.bounds.width / 2 - 20
                 cell.switchLabel.text = "See All"
                 cell.switchLabel.textColor = UIColor.lightGray
                 cell.onSwitch.isHidden = true
