@@ -2,7 +2,7 @@
 
 **Yelp** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spent: **X** hours spent in total
+Time spent: **25** hours spent in total
 
 ## User Stories
 
@@ -52,7 +52,7 @@ Challenges I faced while building the app include: wrestling with autolayout, mo
 
 ## License
 
-Copyright [2015] [Jasmine Lee]
+Copyright [2016] [Jasmine Lee]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
